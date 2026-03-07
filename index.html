@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поздравление с 8 Марта!</title>
+    <!-- Подключаем CSS для index.html -->
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="gradient-bg"> <!-- Добавлен класс для градиента, если он определен в style.css -->
+
+    <div class="container">
+        <h1>Поздравление с 8 Марта!</h1>
+        <p>С Международным женским днём!</p>
+
+        <form id="greetingForm">
+            <label for="nameInput">Введите имя:</label><br>
+            <input type="text" id="nameInput" name="name" placeholder="Например, Злата"><br><br>
+            <button type="submit">Поздравить</button>
+        </form>
+        <div id="errorMessage" class="error-message">Имя не найдено. Попробуйте другое.</div>
+    </div>
+
+    <!-- Подключаем JS скрипт для эффекта сердец (если он нужен на index.html) -->
+    <script src="static/js/script.js"></script>
+    <!-- Подключаем JS скрипт для обработки формы -->
+    <script src="static/js/script_index.js"></script>
+
+</body>
+</html>

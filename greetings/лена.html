@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поздравление для Лены</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/greet.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Поздравление</h1>
+        <h1>Мамы</h1>
+
+        <p>Дорогая Мама! Поздравляю тебя от всего сердца!</p>
+        <p>Хочу рассказать несколько фактов про твоё имя</p>
+
+        <section>
+            <h2>Значение имени:</h2>
+            <p>Имя Лена происходит от имени Елена, что означает "светлая", "просвещённая". Оно символизирует ясность мысли, доброжелательность и внутреннюю гармонию <strong>✨</strong>.</p>
+        </section>
+
+        <section>
+            <h2>Значение букв в имени "Лена":</h2>
+            <ul>
+                <li><strong>Л</strong> — любовь, лидерство, ласка <strong>🥰</strong></li>
+                <li><strong>Е</strong> — естественная, единство <strong>🌟</strong></li>
+                <li><strong>Н</strong> — надежность, нежность <strong>🤗</strong></li>
+                <li><strong>А</strong> — активность, амбиции, адаптивность <strong>😊</strong></li>
+            </ul>
+        </section>
+
+        <section class="facts-section">
+            <h2>Известные личности с именем Лена:</h2>
+            <div class="facts-container">
+                <div class="fact-card">
+                    <img src="static/img/lena_ravnopostol.png" alt="Елена Константинопольская" class="person-image">
+                    <h3>Елена Константинопольская</h3>
+                    <p>Святая равноапостольная царица Елена Константинопольская (ок. 250–330 гг.) — одна из самых почитаемых женщин в христианстве, мать римского императора Константина Великого. </p>
+                </div>
+                <div class="fact-card">
+                    <img src="static/img/lena_victorovna.png" alt="Елена Викторовна" class="person-image">
+                    <h3>Елена Викторовна</h3>
+                    <p>Елена Викторовна Бережная — выдающаяся российская фигуристка, выступавшая в парном катании. Заслуженный мастер спорта России (2000).</p>
+                </div>
+                <div class="fact-card">
+                    <img src="static/img/lena_vladimirovna.png" alt="Елена Владимировна" class="person-image">
+                    <h3>Елена Владимировна</h3>
+                    <p>Елена Владимировна Кондакова — третья российская женщина-космонавт, Герой Российской Федерации (1995) и первая женщина в истории, совершившая длительный космический полет.</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Символика имени:</h2>
+            <p>Лена ассоциируется с лучиками света <strong>☀️</strong>, добрым ветерком <strong>🍃</strong> и уютом домашнего очага <strong>🏡</strong>.</p>
+        </section>
+
+        <div class="special-message">И ещё раз с 8 Марта <strong>💖</strong>!</div>
+        <p>Пусть каждый день дарит тебе радость, любовь и вдохновение!</p>
+        <p>Твой сын <strong>😎</strong></p>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

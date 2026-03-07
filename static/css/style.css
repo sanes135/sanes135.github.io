@@ -1,0 +1,115 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    color: white;
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.gradient-bg {
+    background: linear-gradient(85deg, #2c0a2e, #4a0f4d, #6a1b9a);
+}
+
+.container {
+    text-align: center;
+    padding: 2rem;
+    max-width: 600px;
+    width: 90%;
+    z-index: 2;
+    position: relative;
+}
+
+h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px rgba(255, 182, 193, 0.7);
+}
+
+p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    max-width: 400px;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    border: 2px solid #ff69b4;
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    outline: none;
+}
+
+input[type="text"]:focus {
+    border-color: #ff1493;
+    box-shadow: 0 0 8px rgba(255, 20, 147, 0.6);
+}
+
+input[type="text"]::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+button, a {
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+    font-family: 'Arial', sans-serif;
+}
+
+button:hover, a:hover {
+    background-color: #ff1493;
+}
+
+.special-message {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: #ffb6c1;
+    font-weight: bold;
+    margin: 1.5rem 0;
+    animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        text-shadow: 0 0 5px #fff, 0 0 10px #ffb6c1;
+    }
+    to {
+        text-shadow: 0 0 10px #fff, 0 0 20px #ffb6c1, 0 0 30px #ff69b4;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 { font-size: 2.5rem; }
+    .special-message { font-size: 1.5rem; }
+    input[type="text"] { padding: 0.8rem 1.2rem; font-size: 1rem; }
+    button, a { padding: 0.8rem 1.5rem; font-size: 1rem; }
+}

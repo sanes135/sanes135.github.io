@@ -1,32 +1,624 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поздравление с 8 Марта!</title>
-    <!-- Подключаем CSS для index.html -->
-    <link rel="stylesheet" href="static/css/style.css">
-     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fbf5f0">
+  <meta name="description" content="Нежное интерактивное поздравление с днём рождения для самой любимой Мамы.">
+  <title>С днём рождения, Мама! ♡</title>
+  <style>
+    :root {
+      --paper: #fbf5f0;
+      --paper-deep: #f3e5dd;
+      --ink: #30212c;
+      --muted: #7b6874;
+      --rose: #bb647d;
+      --rose-dark: #8f3f5a;
+      --rose-light: #f4dce1;
+      --plum: #4c3449;
+      --gold: #c99b55;
+      --line: rgba(92, 58, 74, .14);
+      --white: #fffdfb;
+      --serif: "Iowan Old Style", "Baskerville", "Palatino Linotype", Georgia, serif;
+      --sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+      --shadow: 0 24px 70px rgba(74, 43, 60, .11);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 4% 12%, rgba(238, 202, 207, .36), transparent 30%),
+        radial-gradient(ellipse at 96% 44%, rgba(228, 207, 187, .32), transparent 28%),
+        radial-gradient(ellipse at 52% 100%, rgba(233, 211, 220, .25), transparent 34%);
+    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; }
+    a { color: inherit; }
+    button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 3px solid #d89caf; outline-offset: 4px; }
+    ::selection { background: #efd0d8; color: var(--ink); }
+    .progress { position: fixed; z-index: 50; top: 0; left: 0; width: 0; height: 3px; background: linear-gradient(90deg, #c77f91, #d4ae70); }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin-inline: auto; }
+    .site-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid rgba(92,58,74,.08); background: rgba(251,245,240,.83); backdrop-filter: blur(16px); }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; font-size: 11px; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+    .brand-mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: var(--rose-dark); background: #f4e1e3; }
+    .nav-links { display: flex; align-items: center; gap: 28px; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; transition: color .2s ease; }
+    .nav-links a:hover { color: var(--rose-dark); }
+    .sound-toggle { display: inline-flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 999px; color: var(--plum); background: rgba(255,253,251,.7); font-size: 11px; cursor: pointer; transition: background .2s, transform .2s; }
+    .sound-toggle:hover { background: white; transform: translateY(-1px); }
+    .sound-dot { width: 7px; height: 7px; border-radius: 50%; background: #b6a4ae; }
+    .sound-toggle[aria-pressed="true"] .sound-dot { background: #6c9f7c; box-shadow: 0 0 0 4px rgba(108,159,124,.13); }
+
+    .hero { position: relative; min-height: 680px; display: grid; grid-template-columns: 1.03fr .97fr; align-items: center; gap: clamp(32px, 6vw, 80px); padding-block: 76px 92px; }
+    .hero::after { content: ""; position: absolute; width: 300px; height: 300px; left: -230px; bottom: 2px; border: 1px solid rgba(187,100,125,.18); border-radius: 50%; box-shadow: 0 0 0 28px rgba(187,100,125,.025), 0 0 0 56px rgba(187,100,125,.02); pointer-events: none; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; color: var(--rose-dark); font-size: 10px; font-weight: 800; letter-spacing: .2em; line-height: 1.7; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 24px; height: 1px; background: var(--gold); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 650px; margin: 21px 0 22px; font: 400 clamp(58px, 7.4vw, 94px)/.98 var(--serif); letter-spacing: -.055em; }
+    h1 em { color: var(--rose); font-weight: 400; }
+    .hero-copy { max-width: 485px; color: var(--muted); font-size: 15px; line-height: 1.9; }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 13px; margin-top: 31px; }
+    .btn { display: inline-flex; justify-content: center; align-items: center; gap: 11px; min-height: 49px; padding: 0 21px; border: 1px solid transparent; border-radius: 999px; text-decoration: none; cursor: pointer; font-size: 12px; font-weight: 700; transition: transform .22s ease, box-shadow .22s ease, background .22s ease; }
+    .btn:hover { transform: translateY(-3px); }
+    .btn-primary { color: white; background: var(--plum); box-shadow: 0 10px 24px rgba(76,52,73,.18); }
+    .btn-primary:hover { background: #63435d; box-shadow: 0 15px 30px rgba(76,52,73,.22); }
+    .btn-soft { border-color: var(--line); color: var(--plum); background: rgba(255,253,251,.65); }
+    .btn-soft:hover { background: white; }
+    .hero-note { display: flex; align-items: center; gap: 10px; margin-top: 34px; color: #937d89; font: italic 16px var(--serif); }
+    .hero-note svg { color: var(--rose); flex: 0 0 auto; }
+
+    .art-stage { position: relative; min-height: 485px; display: grid; place-items: center; }
+    .art-halo { position: absolute; width: min(100%, 450px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 45%, #f3dfe0 0, #f6e8df 49%, rgba(246,232,223,0) 70%); }
+    .art-frame { position: relative; width: min(100%, 410px); min-height: 430px; overflow: hidden; border: 1px solid rgba(255,255,255,.8); border-radius: 210px 210px 24px 24px; background: linear-gradient(155deg, #f7e7e1, #f0d9d9 54%, #e8d4d7); box-shadow: 0 28px 65px rgba(106,66,82,.12), inset 0 0 0 9px rgba(255,255,255,.25); transform: rotate(1.5deg); }
+    .art-frame::before, .art-frame::after { content: ""; position: absolute; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; width: 390px; height: 390px; left: 10px; top: 62px; }
+    .art-frame::after { width: 320px; height: 320px; left: 45px; top: 98px; }
+    .bouquet { position: absolute; inset: 36px 12px 54px; z-index: 1; width: calc(100% - 24px); height: calc(100% - 90px); }
+    .art-caption { position: absolute; z-index: 2; left: 0; right: 0; bottom: 25px; text-align: center; color: #6d4b5a; font: italic 24px var(--serif); }
+    .floating-note { position: absolute; z-index: 3; display: flex; align-items: center; gap: 10px; padding: 13px 16px; border: 1px solid rgba(255,255,255,.8); border-radius: 15px; background: rgba(255,253,251,.91); box-shadow: 0 13px 34px rgba(76,52,73,.1); color: var(--plum); font-size: 11px; line-height: 1.5; }
+    .floating-note strong { display: block; font-size: 12px; }
+    .floating-note svg { color: var(--rose); flex-shrink: 0; }
+    .note-one { left: -18px; top: 76px; transform: rotate(-5deg); }
+    .note-two { right: -13px; bottom: 77px; transform: rotate(4deg); }
+    .sparkle { position: absolute; color: var(--gold); font-size: 25px; animation: twinkle 3s ease-in-out infinite; }
+    .sparkle.s1 { top: 37px; right: 60px; }
+    .sparkle.s2 { bottom: 43px; left: 28px; animation-delay: 1s; }
+    .sparkle.s3 { top: 135px; left: 3px; font-size: 16px; animation-delay: 1.7s; }
+    @keyframes twinkle { 0%,100% { opacity: .5; transform: scale(.85) rotate(0); } 50% { opacity: 1; transform: scale(1.18) rotate(20deg); } }
+
+    .ticker { overflow: hidden; border-block: 1px solid rgba(92,58,74,.08); background: rgba(255,253,251,.45); }
+    .ticker-track { display: flex; width: max-content; gap: 30px; padding: 18px 0; animation: ticker 38s linear infinite; color: #8f6d7c; font: italic 17px var(--serif); }
+    .ticker-track span { display: inline-flex; align-items: center; gap: 30px; white-space: nowrap; }
+    .ticker-track b { color: var(--gold); font: normal 13px var(--sans); }
+    @keyframes ticker { to { transform: translateX(-50%); } }
+
+    .section { padding-block: 112px; }
+    .section-head { max-width: 650px; margin: 0 auto 44px; text-align: center; }
+    .section-head .eyebrow { justify-content: center; }
+    .section-head h2 { margin: 15px 0 14px; font: 400 clamp(37px, 5vw, 58px)/1.06 var(--serif); letter-spacing: -.035em; }
+    .section-head p { margin-bottom: 0; color: var(--muted); font-size: 14px; line-height: 1.8; }
+    .letter-section { position: relative; }
+    .letter-section::before { content: "♡"; position: absolute; top: 58px; left: 2%; color: rgba(187,100,125,.12); font: 150px var(--serif); transform: rotate(-15deg); pointer-events: none; }
+    .letter-shell { position: relative; max-width: 800px; margin-inline: auto; padding: 12px; border: 1px solid rgba(187,100,125,.19); border-radius: 24px; background: rgba(255,253,251,.53); box-shadow: var(--shadow); }
+    .letter-paper { position: relative; overflow: hidden; padding: clamp(26px, 6vw, 62px); border: 1px solid rgba(201,155,85,.28); border-radius: 16px; background: var(--white); }
+    .letter-paper::before { content: ""; position: absolute; width: 250px; height: 250px; right: -116px; top: -120px; border: 1px solid rgba(201,155,85,.2); border-radius: 50%; box-shadow: 0 0 0 18px rgba(201,155,85,.035), 0 0 0 36px rgba(201,155,85,.025); }
+    .letter-stamp { display: grid; place-items: center; width: 54px; height: 54px; margin-bottom: 25px; border: 1px solid #e8c9d1; border-radius: 50%; color: var(--rose-dark); background: #faeef0; }
+    .letter-topline { color: var(--rose-dark); font-size: 10px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+    .letter-paper h3 { margin: 15px 0 19px; font: 400 clamp(30px, 4vw, 42px) var(--serif); }
+    .letter-content { max-width: 610px; color: #6d5c67; font: 17px/1.95 var(--serif); }
+    .letter-content p { margin-bottom: 17px; }
+    .letter-content .signature { margin-top: 28px; color: var(--rose-dark); font-style: italic; font-size: 21px; }
+    .letter-hidden { position: absolute; z-index: 4; inset: 0; display: grid; place-items: center; padding: 25px; text-align: center; background: linear-gradient(135deg, rgba(248,230,232,.97), rgba(251,243,234,.98)); transition: opacity .65s ease, transform .65s ease, visibility .65s; }
+    .letter-hidden .envelope-icon { display: grid; place-items: center; width: 74px; height: 74px; margin: 0 auto 20px; border: 1px solid rgba(187,100,125,.22); border-radius: 50%; color: var(--rose-dark); background: rgba(255,255,255,.7); }
+    .letter-hidden h3 { margin: 0 0 10px; font: 400 34px var(--serif); }
+    .letter-hidden p { max-width: 300px; margin: 0 auto 23px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .letter-shell.is-open .letter-hidden { opacity: 0; visibility: hidden; transform: translateY(-12px) scale(.98); pointer-events: none; }
+    .letter-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 15px; margin-top: 23px; color: #a18e99; font-size: 11px; }
+    .letter-foot span { display: inline-flex; align-items: center; gap: 7px; }
+
+    .reasons-section { background: linear-gradient(180deg, rgba(244,227,225,.35), rgba(255,253,251,.2)); border-block: 1px solid rgba(92,58,74,.06); }
+    .reasons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .reason-card { min-height: 310px; perspective: 1000px; cursor: pointer; border-radius: 20px; }
+    .reason-inner { position: relative; height: 100%; min-height: 310px; transform-style: preserve-3d; transition: transform .75s cubic-bezier(.2,.75,.25,1); }
+    .reason-card.is-flipped .reason-inner { transform: rotateY(180deg); }
+    .reason-face { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: flex-start; padding: 29px; border: 1px solid var(--line); border-radius: 20px; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .reason-front { background: rgba(255,253,251,.8); box-shadow: 0 13px 36px rgba(74,43,60,.045); }
+    .reason-back { justify-content: center; transform: rotateY(180deg); background: var(--plum); color: #fff7f0; }
+    .reason-number { display: grid; place-items: center; width: 43px; height: 43px; border-radius: 50%; color: var(--rose-dark); background: #f7e5e8; font: italic 20px var(--serif); }
+    .reason-icon { margin: 26px 0 12px; color: var(--gold); }
+    .reason-front h3 { max-width: 230px; margin: 0 0 10px; font: 400 27px/1.14 var(--serif); }
+    .reason-front p { margin: 0; color: #9a8792; font-size: 11px; line-height: 1.7; }
+    .reason-back .mini-label { margin-bottom: 16px; color: #e7b7c4; font-size: 9px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+    .reason-back p { margin: 0; font: 20px/1.6 var(--serif); }
+    .reason-back .back-heart { margin-top: 22px; color: #e9b9c5; }
+    .flip-hint { margin-top: 26px; text-align: center; color: #9b8791; font-size: 11px; }
+
+    .wish-layout { display: grid; grid-template-columns: .85fr 1.15fr; align-items: center; gap: 70px; }
+    .wish-copy .eyebrow { margin-bottom: 15px; }
+    .wish-copy h2 { margin: 0 0 18px; font: 400 clamp(38px, 5vw, 56px)/1.05 var(--serif); letter-spacing: -.04em; }
+    .wish-copy > p { max-width: 420px; color: var(--muted); font-size: 14px; line-height: 1.9; }
+    .wish-list { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin: 28px 0; padding: 0; list-style: none; }
+    .wish-list li { display: flex; align-items: flex-start; gap: 9px; color: #6e5a67; font: 16px/1.45 var(--serif); }
+    .wish-list svg { flex: 0 0 auto; margin-top: 3px; color: var(--rose); }
+    .cake-card { position: relative; min-height: 450px; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(187,100,125,.14); border-radius: 28px; background: linear-gradient(145deg, #f3e4e1, #f8eee4 56%, #eddbdf); }
+    .cake-card::before, .cake-card::after { content: ""; position: absolute; width: 350px; height: 350px; border: 1px solid rgba(255,255,255,.7); border-radius: 50%; }
+    .cake-card::after { width: 280px; height: 280px; }
+    .cake-svg { position: relative; z-index: 2; width: min(90%, 420px); overflow: visible; filter: drop-shadow(0 18px 20px rgba(106,66,82,.12)); }
+    .cake-caption { position: absolute; z-index: 3; bottom: 23px; left: 0; right: 0; text-align: center; color: #866272; font: italic 20px var(--serif); }
+    .candle-flame { transform-origin: 230px 113px; animation: flame 1.15s ease-in-out infinite alternate; transition: opacity .25s ease; }
+    .cake-card.blown .candle-flame { opacity: 0; animation: none; }
+    @keyframes flame { from { transform: scale(.88) rotate(-3deg); } to { transform: scale(1.09) rotate(3deg); } }
+    .wish-button { position: absolute; z-index: 4; top: 20px; right: 20px; display: inline-flex; align-items: center; gap: 7px; border: 1px solid rgba(255,255,255,.85); border-radius: 999px; padding: 10px 14px; color: var(--plum); background: rgba(255,253,251,.78); cursor: pointer; font-size: 11px; transition: transform .2s, background .2s; }
+    .wish-button:hover { transform: translateY(-2px); background: white; }
+
+    .hug-section { padding-top: 25px; }
+    .hug-panel { position: relative; overflow: hidden; padding: clamp(35px, 7vw, 76px) 25px; border-radius: 28px; text-align: center; color: #fff8f4; background: var(--plum); }
+    .hug-panel::before, .hug-panel::after { content: ""; position: absolute; width: 250px; height: 250px; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; }
+    .hug-panel::before { left: -100px; top: -120px; box-shadow: 0 0 0 23px rgba(255,255,255,.025), 0 0 0 47px rgba(255,255,255,.02); }
+    .hug-panel::after { right: -90px; bottom: -160px; width: 360px; height: 360px; }
+    .hug-panel .eyebrow { color: #e4b5c2; justify-content: center; }
+    .hug-panel .eyebrow::before { background: #d5a566; }
+    .hug-panel h2 { position: relative; z-index: 1; margin: 16px 0 14px; font: 400 clamp(38px, 5vw, 58px)/1.08 var(--serif); letter-spacing: -.035em; }
+    .hug-panel > p { position: relative; z-index: 1; max-width: 510px; margin: 0 auto; color: #d9c8d3; font-size: 13px; line-height: 1.8; }
+    .hug-button { position: relative; z-index: 2; margin-top: 27px; color: var(--plum); background: #f5dce1; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+    .hug-button:hover { background: #ffe9ec; }
+    .hug-count { position: relative; z-index: 1; margin-top: 20px; color: #d9c8d3; font-size: 11px; }
+    .hug-count strong { color: #fff4f2; font-weight: 700; }
+    .floating-heart { position: fixed; z-index: 60; bottom: 18%; pointer-events: none; color: #d97f98; font-size: 24px; animation: heart-rise 1.9s cubic-bezier(.15,.65,.35,1) forwards; filter: drop-shadow(0 4px 4px rgba(0,0,0,.08)); }
+    @keyframes heart-rise { 0% { opacity: 0; transform: translateY(0) scale(.4) rotate(-12deg); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(-280px) scale(1.35) rotate(18deg); } }
+
+    footer { padding: 58px 0 32px; text-align: center; }
+    .footer-heart { display: grid; place-items: center; width: 45px; height: 45px; margin: 0 auto 16px; border-radius: 50%; color: var(--rose-dark); background: #f5e1e5; }
+    footer p { margin-bottom: 8px; color: var(--plum); font: italic 24px var(--serif); }
+    footer small { color: #a18e99; font-size: 10px; letter-spacing: .08em; }
+    .toast { position: fixed; z-index: 80; left: 50%; bottom: 28px; max-width: calc(100% - 32px); padding: 14px 20px; border: 1px solid rgba(255,255,255,.6); border-radius: 14px; color: white; background: #493348; box-shadow: 0 16px 40px rgba(48,33,44,.2); font-size: 12px; line-height: 1.5; opacity: 0; transform: translate(-50%, 20px); pointer-events: none; transition: opacity .3s, transform .3s; text-align: center; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    #confetti { position: fixed; inset: 0; z-index: 70; width: 100%; height: 100%; pointer-events: none; }
+    [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1); }
+    [data-reveal].visible { opacity: 1; transform: translateY(0); }
+    .no-js [data-reveal] { opacity: 1; transform: none; }
+
+    @media (max-width: 900px) {
+      .hero { min-height: auto; grid-template-columns: 1fr 1fr; gap: 28px; padding-block: 65px 72px; }
+      h1 { font-size: clamp(53px, 8vw, 76px); }
+      .art-stage { min-height: 420px; }
+      .art-frame { min-height: 380px; }
+      .floating-note { padding: 10px 12px; }
+      .note-one { left: -10px; }
+      .note-two { right: -5px; }
+      .wish-layout { gap: 35px; }
+      .cake-card { min-height: 400px; }
+    }
+    @media (max-width: 680px) {
+      .wrap { width: min(100% - 32px, 500px); }
+      .nav { min-height: 66px; gap: 10px; }
+      .brand { font-size: 9px; letter-spacing: .12em; gap: 7px; }
+      .brand-mark { width: 31px; height: 31px; }
+      .nav-links { display: none; }
+      .sound-toggle { padding: 9px 11px; font-size: 10px; }
+      .hero { display: flex; flex-direction: column; align-items: stretch; gap: 14px; padding-block: 56px 62px; }
+      .hero-copy { font-size: 14px; }
+      h1 { max-width: 480px; font-size: clamp(58px, 15vw, 78px); }
+      .hero-actions { margin-top: 24px; }
+      .hero-note { margin-top: 24px; }
+      .art-stage { min-height: 410px; margin: 13px 4px 0; }
+      .art-frame { width: min(84%, 350px); min-height: 380px; }
+      .note-one { left: -3px; top: 48px; }
+      .note-two { right: -2px; bottom: 55px; }
+      .section { padding-block: 78px; }
+      .section-head { margin-bottom: 32px; }
+      .letter-section::before { top: 30px; left: -17px; font-size: 100px; }
+      .letter-paper { padding: 30px 22px; }
+      .letter-content { font-size: 16px; }
+      .letter-foot { flex-direction: column; align-items: flex-start; }
+      .reasons-grid { grid-template-columns: 1fr; gap: 13px; }
+      .reason-card, .reason-inner { min-height: 245px; }
+      .reason-face { padding: 24px; }
+      .reason-icon { margin: 17px 0 8px; }
+      .reason-front h3 { font-size: 28px; }
+      .wish-layout { grid-template-columns: 1fr; gap: 30px; }
+      .wish-list { gap: 15px 10px; }
+      .wish-list li { font-size: 15px; }
+      .cake-card { min-height: 360px; }
+      .cake-svg { width: min(96%, 370px); }
+      .hug-section { padding-top: 0; }
+      .hug-panel { border-radius: 22px; }
+      footer { padding-top: 42px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      [data-reveal] { opacity: 1; transform: none; }
+    }
+  </style>
 </head>
-<body class="gradient-bg"> <!-- Добавлен класс для градиента, если он определен в style.css -->
+<body class="no-js">
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
 
-    <div class="container">
-        <h1>Поздравление с 8 Марта!</h1>
-        <p>С Международным женским днём!</p>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="На главную">
+        <span class="brand-mark" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20.8 8.8c0 5.1-8.8 10-8.8 10s-8.8-4.9-8.8-10A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
+        <span>С днём рождения</span>
+      </a>
+      <nav class="nav-links" aria-label="Основная навигация">
+        <a href="#letter">Письмо</a>
+        <a href="#reasons">Твои достижения</a>
+        <a href="#wish">Загадай желание</a>
+      </nav>
+    </div>
+  </header>
 
-        <form id="greetingForm">
-            <label for="nameInput">Введите имя:</label><br>
-            <input type="text" id="nameInput" name="name" placeholder="Например, Злата"><br><br>
-            <button type="submit">Поздравить</button>
-        </form>
-        <div id="errorMessage" class="error-message">Имя не найдено. Попробуйте другое.</div>
+  <main id="top">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div class="hero-text" data-reveal>
+        <div class="eyebrow">Сегодня твой день рождения!</div>
+        <h1 id="hero-title">С днём рождения, <em>Мама!</em></h1>
+        <p class="hero-copy">Я желаю тебе всего самого наилучшего, желаю счастья, добра, радости и веселья. Ты заслуживаешь всего самого хорошего и даже больше.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#letter">Прочитать письмо <span aria-hidden="true">↗</span></a>
+          <a class="btn btn-soft" href="#reasons">Прочитать достижения <span aria-hidden="true">♡</span></a>
+        </div>
+        <div class="hero-note"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20.2S3.5 15.4 3.5 9.4a4.6 4.6 0 0 1 8.5-2.2 4.6 4.6 0 0 1 8.5 2.2c0 6-8.5 10.8-8.5 10.8Z" stroke="currentColor" stroke-width="1.5"/><path d="m8.7 12.1 2.1 2.1 4.6-4.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Сделано только для тебя
+        </div>
+      </div>
+
+      <div class="art-stage" data-reveal aria-label="Иллюстрация нежного букета цветов">
+        <div class="art-halo"></div>
+        <span class="sparkle s1" aria-hidden="true">✧</span><span class="sparkle s2" aria-hidden="true">✦</span><span class="sparkle s3" aria-hidden="true">✧</span>
+        <div class="floating-note note-one"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20s-8-4.5-8-10a4.2 4.2 0 0 1 8-1.3A4.2 4.2 0 0 1 20 10c0 5.5-8 10-8 10Z" fill="#e8bdc8" stroke="#bb647d" stroke-width="1.2"/></svg><span><strong>Самая-самая</strong>моя любимая мама</span></div>
+        <div class="art-frame">
+          <svg class="bouquet" viewBox="0 0 390 430" role="img" aria-label="Розовые и кремовые цветы в вазе">
+            <defs>
+              <linearGradient id="vase" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1e9"/><stop offset=".5" stop-color="#dca9ad"/><stop offset="1" stop-color="#b7778d"/></linearGradient>
+              <linearGradient id="petalPink" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#fbe4e5"/><stop offset="1" stop-color="#d9879f"/></linearGradient>
+              <linearGradient id="petalCream" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff8e9"/><stop offset="1" stop-color="#e6bd9e"/></linearGradient>
+              <linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b2b8a0"/><stop offset="1" stop-color="#617d72"/></linearGradient>
+            </defs>
+            <g fill="none" stroke="#718b78" stroke-width="3" stroke-linecap="round">
+              <path d="M194 324 Q175 230 119 117"/><path d="M196 326 Q220 229 270 115"/><path d="M189 324 Q186 220 192 75"/><path d="M197 323 Q250 257 309 190"/><path d="M190 323 Q145 256 73 196"/><path d="M192 324 Q230 270 236 173"/>
+            </g>
+            <g fill="url(#leaf)" stroke="#718b78" stroke-width="1.2">
+              <path d="M151 251 Q97 250 91 204 Q136 207 151 251Z"/><path d="M162 274 Q113 289 92 253 Q135 240 162 274Z"/><path d="M228 258 Q276 226 285 187 Q241 201 228 258Z"/><path d="M215 290 Q266 300 294 263 Q253 251 215 290Z"/><path d="M181 220 Q136 204 134 166 Q171 177 181 220Z"/><path d="M218 211 Q257 184 251 148 Q219 167 218 211Z"/><path d="M188 190 Q160 150 174 121 Q201 151 188 190Z"/><path d="M205 247 Q240 223 234 195 Q208 207 205 247Z"/><path d="M152 295 Q114 306 105 281 Q137 267 152 295Z"/>
+            </g>
+            <g transform="translate(118 117)">
+              <g fill="url(#petalCream)" stroke="#d5a789" stroke-width="1"><ellipse cy="-16" rx="10" ry="18"/><ellipse cy="-16" rx="10" ry="18" transform="rotate(45)"/><ellipse cy="-16" rx="10" ry="18" transform="rotate(90)"/><ellipse cy="-16" rx="10" ry="18" transform="rotate(135)"/><ellipse cy="-16" rx="10" ry="18" transform="rotate(180)"/><ellipse cy="-16" rx="10" ry="18" transform="rotate(225)"/><ellipse cy="-16" rx="10" ry="18" transform="rotate(270)"/><ellipse cy="-16" rx="10" ry="18" transform="rotate(315)"/></g><circle r="10" fill="#c69a52"/><circle r="3" fill="#f8e7ae"/>
+            </g>
+            <g transform="translate(270 115)">
+              <g fill="url(#petalPink)" stroke="#c97891" stroke-width="1"><ellipse cy="-18" rx="12" ry="21"/><ellipse cy="-18" rx="12" ry="21" transform="rotate(45)"/><ellipse cy="-18" rx="12" ry="21" transform="rotate(90)"/><ellipse cy="-18" rx="12" ry="21" transform="rotate(135)"/><ellipse cy="-18" rx="12" ry="21" transform="rotate(180)"/><ellipse cy="-18" rx="12" ry="21" transform="rotate(225)"/><ellipse cy="-18" rx="12" ry="21" transform="rotate(270)"/><ellipse cy="-18" rx="12" ry="21" transform="rotate(315)"/></g><circle r="12" fill="#bc6e83"/><circle r="5" fill="#e8b967"/>
+            </g>
+            <g transform="translate(192 75)">
+              <g fill="#f6d9d9" stroke="#d99aaa" stroke-width="1"><ellipse cy="-17" rx="11" ry="20"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(60)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(120)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(180)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(240)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(300)"/></g><circle r="10" fill="#c89551"/><circle r="3" fill="#fff0bd"/>
+            </g>
+            <g transform="translate(73 196) scale(.8)">
+              <g fill="#e7a6b8" stroke="#c97891" stroke-width="1"><ellipse cy="-17" rx="11" ry="20"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(60)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(120)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(180)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(240)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(300)"/></g><circle r="9" fill="#b96e80"/><circle r="3" fill="#f2d17d"/>
+            </g>
+            <g transform="translate(309 190) scale(.76)">
+              <g fill="url(#petalCream)" stroke="#d5a789" stroke-width="1"><ellipse cy="-17" rx="11" ry="20"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(60)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(120)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(180)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(240)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(300)"/></g><circle r="9" fill="#c69a52"/>
+            </g>
+            <g transform="translate(236 173) scale(.65)">
+              <g fill="#f3d4da" stroke="#d99aaa" stroke-width="1"><ellipse cy="-17" rx="11" ry="20"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(60)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(120)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(180)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(240)"/><ellipse cy="-17" rx="11" ry="20" transform="rotate(300)"/></g><circle r="9" fill="#c69a52"/>
+            </g>
+            <g transform="translate(154 322) rotate(-4)"><path d="M0 0 Q-6 32 8 62 L68 62 Q81 31 74 0Z" fill="url(#vase)" stroke="#bd899b" stroke-width="1.5"/><ellipse cx="37" cy="1" rx="37" ry="9" fill="#f9e4e4" stroke="#bd899b" stroke-width="1.5"/><ellipse cx="37" cy="1" rx="27" ry="4" fill="#bd899b" opacity=".25"/><path d="M12 29 Q39 39 63 28" fill="none" stroke="#fff3ec" stroke-width="2" opacity=".7"/><path d="M15 45 Q38 53 60 43" fill="none" stroke="#fff3ec" stroke-width="1.5" opacity=".5"/></g>
+            <g fill="#d3aa68" opacity=".8"><circle cx="90" cy="150" r="2.5"/><circle cx="300" cy="80" r="2"/><circle cx="322" cy="238" r="2.5"/><circle cx="102" cy="226" r="2"/><path d="M320 127 l3 7 7 3-7 3-3 7-3-7-7-3 7-3Z"/><path d="M82 90 l2 5 5 2-5 2-2 5-2-5-5-2 5-2Z"/></g>
+          </svg>
+          <div class="art-caption">Ты лучшая мама насвете!</div>
+        </div>
+        <div class="floating-note note-two"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8m0-12.8L5.6 18.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg><span><strong>Побольше радости</strong>и поводов улыбаться</span></div>
+      </div>
+    </section>
+
+    <div class="ticker" aria-label="Пожелания для мамы">
+      <div class="ticker-track" aria-hidden="true">
+        <span>Здоровья и спокойствия <b>✦</b> Улыбок каждый день <b>♡</b> Тепла в душе <b>✦</b> Сбывшихся желаний <b>♡</b> Много-много любви <b>✦</b></span>
+        <span>Здоровья и спокойствия <b>✦</b> Улыбок каждый день <b>♡</b> Тепла в душе <b>✦</b> Сбывшихся желаний <b>♡</b> Много-много любви <b>✦</b></span>
+      </div>
     </div>
 
-    <!-- Подключаем JS скрипт для эффекта сердец (если он нужен на index.html) -->
-    <script src="static/js/script.js"></script>
-    <!-- Подключаем JS скрипт для обработки формы -->
-    <script src="static/js/script_index.js"></script>
+    <section class="section letter-section" id="letter">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <div class="eyebrow">Я написал это для тебя</div>
+          <h2>Письмо для тебя</h2>
+        </div>
+        <div class="letter-shell" id="letterShell" data-reveal>
+          <div class="letter-paper">
+            <div class="letter-stamp" aria-hidden="true"><svg width="25" height="25" viewBox="0 0 24 24" fill="none"><path d="M20.8 8.8c0 5.1-8.8 10-8.8 10s-8.8-4.9-8.8-10A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+            <h3>С днём рождения Мама!</h3>
+            <div class="letter-content">
+              <p>С днём рождения, моя любимая Мама! ♡</p>
+              <p>Спасибо тебе за твою доброту, за заботу и за то что тепришь все наши выходки...</p>
+              <p>Я желаю тебе крепкого здоровья, спокойствия, радостных дней. Пусть в твоём будущем будут только хорошие дни.</p>
+              <p>Я не мастер писать письма и ты это очень хорошо знаешь, но я надеюсь тебе понравилось это маленькое письмо:)</p>
+              <p class="signature">И ещё раз с днём рождения! ♡</p>
+            </div>
+            <div class="letter-foot"><span>♡ Написано мною с любовью (как и весь сайт)</span></div>
+          </div>
+          <div class="letter-hidden" id="letterCover">
+            <div>
+              <div class="envelope-icon" aria-hidden="true"><svg width="34" height="34" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 4.5h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+              <h3>Твоё письмо</h3>
+              <button class="btn btn-primary" id="openLetter" type="button">Открыть письмо <span aria-hidden="true">♡</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <section class="section reasons-section" id="reasons">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <div class="eyebrow">Твои достижения</div>
+          <h2>Твои достижения</h2>
+          <p>Тут я хочу показать чего ты добилась за этот год</p>
+        </div>
+        <div class="reasons-grid">
+          <div class="reason-card" role="button" tabindex="0" aria-label="Открыть карточку: за твою доброту" aria-pressed="false" data-reveal>
+            <div class="reason-inner">
+              <div class="reason-face reason-front"><span class="reason-number">01</span><div class="reason-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 20s-8-4.5-8-10a4.2 4.2 0 0 1 8-1.3A4.2 4.2 0 0 1 20 10c0 5.5-8 10-8 10Z" stroke="currentColor" stroke-width="1.4"/><path d="M8 12.5c1.1 1.4 2.3 2 4 2.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div><h3>Твоя помощь</h3><p>Нажми, чтобы открыть карточку ↗</p></div>
+              <div class="reason-face reason-back"><div class="mini-label">Это бесценно</div><p>Ты помогаешь мне и Злате со школой, без тебя мы бы не справелись. Также ты готовишь очень вкусные блюда, которые в ресторане никогда не подадут.</p><span class="back-heart">♡</span></div>
+            </div>
+          </div>
+          <div class="reason-card" role="button" tabindex="0" aria-label="Открыть карточку: за твою мудрость" aria-pressed="false" data-reveal>
+            <div class="reason-inner">
+              <div class="reason-face reason-front"><span class="reason-number">02</span><div class="reason-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 3a7 7 0 0 0-4.4 12.4c.8.7 1.4 1.5 1.4 2.6h6c0-1.1.6-1.9 1.4-2.6A7 7 0 0 0 12 3Z" stroke="currentColor" stroke-width="1.4"/><path d="M9.5 21h5M9.5 18h5M12 6v4m-2-2h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div><h3>Твой успех</h3><p>Нажми, чтобы открыть карточку ↗</p></div>
+              <div class="reason-face reason-back"><div class="mini-label">Твой успех</div><p>Ты смогла разобратся с трудностьями, например, ты смогла продать квартиру, а для новой создать невероятный дизайн.</p><span class="back-heart">♡</span></div>
+            </div>
+          </div>
+          <div class="reason-card" role="button" tabindex="0" aria-label="Открыть карточку: за то, что ты — это ты" aria-pressed="false" data-reveal>
+            <div class="reason-inner">
+              <div class="reason-face reason-front"><span class="reason-number">03</span><div class="reason-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M12 21s-8-4.5-8-10a4.2 4.2 0 0 1 8-1.3A4.2 4.2 0 0 1 20 11c0 5.5-8 10-8 10Z" stroke="currentColor" stroke-width="1.4"/><path d="m8.5 12.2 2.1 2.1 4.8-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Твоя доброта</h3><p>Нажми, чтобы открыть карточку ↗</p></div>
+              <div class="reason-face reason-back"><div class="mini-label">Приятные разговоры</div><p>С тобой очень приятно вести беседы, можно поговорить о всевозможных темах и получить твоё мнение или ответ. Спасибо тебе за это.</p><span class="back-heart">♡</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="wish">
+      <div class="wrap wish-layout">
+        <div class="wish-copy" data-reveal>
+          <div class="eyebrow">Загадай что-нибудь прекрасное</div>
+          <h2>Пусть сбудется всё, о чём мечтается</h2>
+          <p>Пожелай:</p>
+          <ul class="wish-list">
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Здоровье и силы</li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Спокойствие в душе</li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Красивые путешествия</li>
+            <li><svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Много поводов смеяться</li>
+          </ul>
+          <button class="btn btn-primary" id="wishButton" type="button">Задуть свечу и загадать <span aria-hidden="true">✧</span></button>
+        </div>
+        <div class="cake-card" id="cakeCard" data-reveal>
+          <svg class="cake-svg" viewBox="0 0 440 370" role="img" aria-label="Праздничный розовый торт со свечой">
+            <defs>
+              <linearGradient id="cakeBase" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f7cbd1"/><stop offset="1" stop-color="#d88e9f"/></linearGradient>
+              <linearGradient id="cakeTop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff4ec"/><stop offset="1" stop-color="#f2d7d6"/></linearGradient>
+              <linearGradient id="cakePlate" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fffaf0"/><stop offset="1" stop-color="#d9b9ad"/></linearGradient>
+              <linearGradient id="candle" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#fbf0df"/><stop offset=".5" stop-color="#e5a8ad"/><stop offset="1" stop-color="#fff3e7"/></linearGradient>
+            </defs>
+            <ellipse cx="220" cy="298" rx="154" ry="22" fill="#a8768b" opacity=".15"/>
+            <path d="M76 269 Q220 316 364 269 L349 294 Q220 335 91 294Z" fill="url(#cakePlate)" stroke="#c9a99f" stroke-width="1.5"/>
+            <ellipse cx="220" cy="269" rx="144" ry="27" fill="#fff4e9" stroke="#d8b8ad" stroke-width="1.5"/>
+            <path d="M102 188 Q220 211 338 188 L326 269 Q220 294 114 269Z" fill="url(#cakeBase)" stroke="#c87e91" stroke-width="1.4"/>
+            <ellipse cx="220" cy="188" rx="118" ry="30" fill="url(#cakeTop)" stroke="#e0b7b8" stroke-width="1.5"/>
+            <path d="M104 191 Q126 205 145 192 T188 194 T230 193 T273 194 T316 192 T336 190" fill="none" stroke="#fff9ed" stroke-width="5" stroke-linecap="round"/>
+            <path d="M130 221 q-8 10 1 18 q10 7 2 17 M180 225 q-8 9 1 17 q10 8 2 17 M230 222 q-8 11 1 18 q9 8 2 17 M281 221 q-8 10 1 18 q10 8 2 17" fill="none" stroke="#f8e7e1" stroke-width="5" stroke-linecap="round"/>
+            <g fill="#fff4e9" stroke="#d994a5" stroke-width="1.2"><circle cx="132" cy="203" r="7"/><circle cx="171" cy="211" r="6"/><circle cx="215" cy="215" r="7"/><circle cx="263" cy="210" r="6"/><circle cx="304" cy="201" r="7"/></g>
+            <g transform="translate(220 142)"><g fill="#d37e98" stroke="#b96783" stroke-width="1"><ellipse cy="-8" rx="7" ry="13"/><ellipse cy="-8" rx="7" ry="13" transform="rotate(60)"/><ellipse cy="-8" rx="7" ry="13" transform="rotate(120)"/><ellipse cy="-8" rx="7" ry="13" transform="rotate(180)"/><ellipse cy="-8" rx="7" ry="13" transform="rotate(240)"/><ellipse cy="-8" rx="7" ry="13" transform="rotate(300)"/></g><circle r="5" fill="#d5a55d"/></g>
+            <rect x="212" y="88" width="16" height="53" rx="4" fill="url(#candle)" stroke="#d5a3aa" stroke-width="1"/>
+            <path d="M216 97h8M216 107h8M216 117h8" stroke="#fffaf1" stroke-width="2" stroke-linecap="round"/>
+            <path d="M220 87 Q202 70 220 48 Q238 70 220 87Z" fill="#f3b65f" class="candle-flame"/>
+            <path d="M220 82 Q211 70 220 60 Q230 72 220 82Z" fill="#fff1b8" class="candle-flame"/>
+            <path d="M84 172 l5 10 10 4-10 4-5 10-4-10-10-4 10-4Z" fill="#d0a05c" opacity=".8"/><path d="M340 142 l4 8 8 3-8 3-4 8-3-8-8-3 8-3Z" fill="#d0a05c" opacity=".8"/>
+            <g fill="#bb7b8c"><circle cx="105" cy="245" r="3"/><circle cx="323" cy="240" r="3"/><circle cx="155" cy="262" r="2.5"/><circle cx="285" cy="263" r="2.5"/></g>
+          </svg>
+          <div class="cake-caption">С днём рождения ♡</div>
+        </div>
+      </div>
+    </section>
+  <footer>
+    <div class="footer-heart" aria-hidden="true"><svg width="21" height="21" viewBox="0 0 24 24" fill="none"><path d="M20.8 8.8c0 5.1-8.8 10-8.8 10s-8.8-4.9-8.8-10A4.7 4.7 0 0 1 12 6.1a4.7 4.7 0 0 1 8.8 2.7Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+    <p>С любовью от Саши</p>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      'use strict';
+      document.body.classList.remove('no-js');
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const progress = document.getElementById('progress');
+      const updateProgress = () => {
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const percent = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+        progress.style.width = `${Math.min(100, percent)}%`;
+      };
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+
+      const revealItems = document.querySelectorAll('[data-reveal]');
+      if ('IntersectionObserver' in window && !reducedMotion) {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealItems.forEach((item, index) => {
+          item.style.transitionDelay = `${Math.min(index % 3, 2) * 90}ms`;
+          observer.observe(item);
+        });
+      } else {
+        revealItems.forEach(item => item.classList.add('visible'));
+      }
+
+      let toastTimer;
+      const toast = document.getElementById('toast');
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        window.clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => toast.classList.remove('show'), 3100);
+      }
+
+      // Lightweight canvas confetti. No libraries or external assets required.
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let rafId = 0;
+      function resizeCanvas() {
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(window.innerWidth * dpr);
+        canvas.height = Math.round(window.innerHeight * dpr);
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      window.addEventListener('resize', resizeCanvas, { passive: true });
+      resizeCanvas();
+      function drawConfetti() {
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        particles = particles.filter(p => p.life > 0 && p.y < window.innerHeight + 30);
+        particles.forEach(p => {
+          p.x += p.vx; p.y += p.vy; p.vy += 0.055; p.vx *= 0.994; p.rotation += p.spin; p.life -= 1;
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rotation); ctx.globalAlpha = Math.max(0, Math.min(1, p.life / 35));
+          ctx.fillStyle = p.color;
+          if (p.heart) {
+            ctx.font = `${p.size * 1.5}px Georgia`; ctx.fillText('♥', -p.size / 2, p.size / 2);
+          } else {
+            ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.65);
+          }
+          ctx.restore();
+        });
+        if (particles.length) rafId = requestAnimationFrame(drawConfetti);
+        else { ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); cancelAnimationFrame(rafId); rafId = 0; }
+      }
+      function burst(x = window.innerWidth / 2, y = window.innerHeight * .35, count = 90, hearts = false) {
+        if (reducedMotion) count = Math.min(count, 16);
+        const colors = ['#d98299', '#f0c4cd', '#d6ad6e', '#fff1df', '#9a7896', '#e9a78a'];
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 1.5 + Math.random() * (hearts ? 2.5 : 5.5);
+          particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed - (hearts ? 1.8 : 2), size: 4 + Math.random() * 6, color: colors[Math.floor(Math.random() * colors.length)], rotation: Math.random() * 6, spin: (Math.random() - .5) * .18, life: 70 + Math.random() * 35, heart: hearts && Math.random() > .35 });
+        }
+        if (!rafId) rafId = requestAnimationFrame(drawConfetti);
+      }
+
+      // Open the letter and celebrate the moment.
+      const letterShell = document.getElementById('letterShell');
+      const openLetterButton = document.getElementById('openLetter');
+      function openLetter() {
+        if (!letterShell.classList.contains('is-open')) {
+          letterShell.classList.add('is-open');
+          openLetterButton.setAttribute('aria-expanded', 'true');
+          burst(window.innerWidth / 2, window.innerHeight * .43, 85, true);
+          showToast('Это письмо было написано для тебя ♡');
+        }
+      }
+      openLetterButton.setAttribute('aria-expanded', 'false');
+      openLetterButton.addEventListener('click', openLetter);
+
+      // Flip the three love notes by click, Enter, or Space.
+      document.querySelectorAll('.reason-card').forEach(card => {
+        const toggleCard = () => {
+          const flipped = card.classList.toggle('is-flipped');
+          card.setAttribute('aria-pressed', String(flipped));
+        };
+        card.addEventListener('click', toggleCard);
+        card.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggleCard(); }
+        });
+      });
+
+      // The candle is a visual ritual: first click blows it out, later clicks relight it.
+      const cakeCard = document.getElementById('cakeCard');
+      const wishMessages = [
+        'Пусть всё хорошее находит к тебе дорогу. ✨',
+        'Пусть впереди будет много тёплых, счастливых дней. ♡',
+        'Пусть мечты сбываются красиво и вовремя. ✨',
+        'Пусть здоровье будет крепким, а сердце — спокойным. ♡',
+        'Пусть рядом всегда будет любовь, уют и любимые люди. ✨'
+      ];
+      let candleBlown = false;
+      function makeWish() {
+        candleBlown = !candleBlown;
+        cakeCard.classList.toggle('blown', candleBlown);
+        if (candleBlown) {
+          burst(window.innerWidth * .72, window.innerHeight * .48, 115, false);
+          const wish = wishMessages[Math.floor(Math.random() * wishMessages.length)];
+          showToast(`Желание загадано! ${wish}`);
+        } else {
+          showToast('Свеча снова горит — можно загадать ещё одно желание. ♡');
+        }
+      }
+      document.getElementById('wishButton').addEventListener('click', makeWish);
+      document.getElementById('wishSmallButton').addEventListener('click', makeWish);
+
+      // A soft, original synthesized chime melody. It starts only after a click.
+      const soundToggle = document.getElementById('soundToggle');
+      const soundLabel = document.getElementById('soundLabel');
+      let audioContext = null;
+      let melodyTimer = null;
+      let noteIndex = 0;
+      const notes = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880, 698.46, 659.25, 587.33, 523.25, 392];
+      function playNote(frequency) {
+        if (!audioContext || audioContext.state !== 'running') return;
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+        gain.gain.setValueAtTime(0.0001, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.045, audioContext.currentTime + .035);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + .58);
+        oscillator.connect(gain); gain.connect(audioContext.destination);
+        oscillator.start(); oscillator.stop(audioContext.currentTime + .62);
+      }
+      async function toggleMelody() {
+        if (melodyTimer) {
+          window.clearInterval(melodyTimer); melodyTimer = null;
+          if (audioContext) { try { await audioContext.close(); } catch (_) {} audioContext = null; }
+          soundToggle.setAttribute('aria-pressed', 'false');
+          soundToggle.setAttribute('aria-label', 'Включить мелодию');
+          soundLabel.textContent = 'Мелодия: выкл.';
+          return;
+        }
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) { showToast('Похоже, этот браузер не поддерживает звуковую мелодию.'); return; }
+        try {
+          audioContext = new AudioContextClass();
+          await audioContext.resume();
+          noteIndex = 0;
+          playNote(notes[noteIndex++]);
+          melodyTimer = window.setInterval(() => {
+            if (noteIndex >= notes.length) noteIndex = 0;
+            playNote(notes[noteIndex++]);
+          }, 520);
+          soundToggle.setAttribute('aria-pressed', 'true');
+          soundToggle.setAttribute('aria-label', 'Выключить мелодию');
+          soundLabel.textContent = 'Мелодия: вкл.';
+        } catch (_) {
+          showToast('Не удалось включить звук. Попробуй ещё раз.');
+        }
+      }
+      soundToggle.addEventListener('click', toggleMelody);
+      window.addEventListener('pagehide', () => {
+        if (melodyTimer) window.clearInterval(melodyTimer);
+        if (audioContext && audioContext.state !== 'closed') audioContext.close();
+      });
+    })();
+  </script>
 </body>
-
 </html>
